@@ -5,30 +5,41 @@ export default function Splash({ logo = '/saetaLogo.png', bgColor = '#051d8a', d
   const [hide, setHide] = useState(false);
   const [shake, setShake] = useState(false);
   const [showText, setShowText] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // Sacudida antes de encoger
-    setShake(true);
-    setShowText(true); // Mostrar texto desde el inicio
-  const shakeTimeout = setTimeout(() => setShake(false), 900); // Duración de la sacudida (más lento)
-  const shrinkTimeout = setTimeout(() => setAnimate(true), 1600); // Espera a que termine el texto (más lento)
+    // Detectar si es móvil
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    // Animación solo en desktop/tablet
+    if (!isMobile) {
+      setShake(true);
+    }
+    setShowText(true);
+    const shakeTimeout = setTimeout(() => setShake(false), 900);
+    const shrinkTimeout = setTimeout(() => setAnimate(true), 1600);
     const hideTimeout = setTimeout(() => setHide(true), duration + 700);
     return () => {
+      window.removeEventListener('resize', checkMobile);
       clearTimeout(shakeTimeout);
       clearTimeout(shrinkTimeout);
       clearTimeout(hideTimeout);
     };
-  }, [duration]);
+    // eslint-disable-next-line
+  }, [duration, isMobile]);
 
   if (hide) return null;
 
   return (
     <div
       className={`fixed inset-0 z-[9999] flex items-center justify-center pointer-events-none select-none transition-none`}
-      style={{background: 'transparent'}}
     >
       <div
-        className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center transition-[clip-path] duration-[1200ms] ease-in-out w-full h-full`}
+        className={`absolute left-0 top-0 w-full h-full flex items-center justify-center transition-[clip-path] duration-[1200ms] ease-in-out`}
         style={{
           clipPath: animate
             ? 'circle(0% at 50% 50%)'
@@ -36,20 +47,33 @@ export default function Splash({ logo = '/saetaLogo.png', bgColor = '#051d8a', d
           background: bgColor,
         }}
       >
-        <div className="flex flex-col items-center">
-          <img
-            src="/flecha.png"
-            alt="Saeta Design Logo"
-            className={`w-40 h-40 object-contain z-10 transition-all duration-700 ${animate ? 'scale-75 opacity-0' : 'scale-100 opacity-100'} ${shake ? 'animate-wave' : ''}`}
-          />
-          <span
-            className={`block mt-4 text-white text-3xl font-bold tracking-widest overflow-hidden
-              ${showText && !animate ? 'animate-saeta-text' : 'opacity-0 -translate-x-10'}
-              ${animate ? 'opacity-0' : ''}`}
-            style={{letterSpacing: '0.2em'}}
-          >
-            SAETA DESIGN
-          </span>
+        <div className="flex flex-col items-center justify-center w-full h-full">
+          {isMobile ? (
+            <video
+              src="/video.mp4"
+              autoPlay
+              loop
+              muted
+              controls={false}
+              className={`w-full h-full object-cover z-10 transition-all duration-700 ${animate ? 'scale-75 opacity-0' : 'scale-100 opacity-100'}`}
+            />
+          ) : (
+            <>
+              <img
+                src="/flecha.png"
+                alt="Saeta Design Logo"
+                className={`w-40 h-40 object-contain z-10 mx-auto transition-all duration-700 ${animate ? 'scale-75 opacity-0' : 'scale-100 opacity-100'} ${shake ? 'animate-wave' : ''}`}
+              />
+              <span
+                className={`block mt-4 text-white text-3xl font-bold tracking-widest text-center overflow-hidden
+                  ${showText && !animate ? 'animate-saeta-text' : 'opacity-0 -translate-x-10'}
+                  ${animate ? 'opacity-0' : ''}`}
+                style={{letterSpacing: '0.2em'}}
+              >
+                SAETA DESIGN
+              </span>
+            </>
+          )}
         </div>
         <style>{`
           @keyframes wave {
