@@ -49,7 +49,7 @@ export default function NavBar() {
       </div>
       {/* Menú móvil */}
       {menuOpen && (
-        <div className="absolute top-16 left-0 w-full bg-[#051d8a] text-white shadow-lg z-50 animate-slide-down">
+        <div className="absolute top-25 left-0 w-full bg-[#051d8a] text-white shadow-lg z-50 animate-slide-down">
           <div className="flex flex-col items-center space-y-6 py-6">
             <a href="#inicio" className="group relative hover:text-white text-lg font-medium after:content-[''] after:absolute after:left-0 after:-bottom-0.5 after:h-0.5 after:w-0 after:bg-white after:rounded-full after:transition-all after:duration-300 hover:after:w-full" onClick={() => setMenuOpen(false)}>Inicio</a>
             <a href="#servicios" className="group relative hover:text-white text-lg font-medium after:content-[''] after:absolute after:left-0 after:-bottom-0.5 after:h-0.5 after:w-0 after:bg-white after:rounded-full after:transition-all after:duration-300 hover:after:w-full" onClick={() => setMenuOpen(false)}>Servicios</a>
